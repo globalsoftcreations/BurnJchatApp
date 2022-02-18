@@ -5,7 +5,7 @@
  */
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable, Text, View, StyleSheet, Image, useWindowDimensions, } from 'react-native';
@@ -19,11 +19,13 @@ import TabOneScreen from '../screens/HomeScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import {useNavigation} from '@react-navigation/core'
+
+// import {useNavigation} from '@react-navigation/core'
 
 
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import HomeScreen from '../screens/HomeScreen'
+import UserListScreen from '../screens/UserListScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
@@ -44,6 +46,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+
+
   return (
     <Stack.Navigator>
       <Stack.Screen 
@@ -55,6 +59,14 @@ function RootNavigator() {
             name="ChatRoom" 
             component={ChatRoomScreen} 
             options={{ headerTitle: ChatRoomHeader, headerBackVisible:false}} />
+       <Stack.Screen 
+            name="UserList" 
+            component={UserListScreen} 
+            options={{ 
+              headerTitle: UserListHeader, 
+              }} 
+            />
+       
 
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -64,12 +76,26 @@ function RootNavigator() {
   );
 }
 const HomeHeader = (props) =>{
+  const navigation = useNavigation();
+
   return(
     <View style={styles.headContain}>
       <Image source={{uri:'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg'}} style={styles.headImage}/>
       <Text style={styles.headTitle}>Home</Text>
       <Feather name="camera" size={24} color="black" style={{marginHorizontal:5}} />
-      <Feather name="edit-2" size={24} color="black" style={{marginHorizontal:5, padding:10}}/>
+      <Pressable onPress={()=> navigation.navigate("UserList")}>
+        <Feather name="edit-2" size={24} color="black" style={{marginHorizontal:5, padding:10}}/>
+      </Pressable>
+      
+    </View>
+    
+  )
+}
+// 
+const UserListHeader = (props) =>{
+  return(
+    <View style={styles.headContain}>
+      <Text style={styles.headTitle}>Users</Text>
     </View>
     
   )
